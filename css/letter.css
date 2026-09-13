@@ -1,0 +1,136 @@
+/*
+ * AIMEN — Letter Scene CSS
+ * =========================
+ * A physical handwritten letter on paper.
+ * NOT a terminal. NOT typewriter. NOT hacker UI.
+ *
+ * Visual language:
+ *   - paper/parchment texture
+ *   - handwriting font (local, assets/fonts/)
+ *   - natural paper proportions (portrait)
+ *   - soft drop shadow
+ *   - gentle unfold animation
+ */
+
+#scene-letter {
+    background: #0d0e12;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 4vw;
+    gap: 2vh;
+}
+
+/* ── Narration (separate from letter content) ────────────────────────── */
+
+#letter-narration {
+    font-family: var(--font-body);
+    font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+    color: rgba(200, 216, 240, 0.45);
+    letter-spacing: 0.06em;
+    font-style: italic;
+    text-align: center;
+}
+
+/* ── Paper ───────────────────────────────────────────────────────────── */
+
+#letter-paper {
+    background:
+        /* Optional: will use letter texture if available */
+        var(--letter-texture, none),
+        linear-gradient(
+            160deg,
+            #faf7f0 0%,
+            #f5f0e5 40%,
+            #ede8da 100%
+        );
+    color: var(--color-ink);
+    width: min(480px, 88vw);
+    min-height: 520px;
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+    padding: clamp(28px, 5vw, 52px) clamp(32px, 6vw, 64px);
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.8),
+        0 2px 8px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+    position: relative;
+
+    /* Unfold animation initial state */
+    transform-origin: top center;
+    transform: scaleY(0.01);
+    opacity: 0;
+    transition: none;
+}
+
+/* Unfolding animation trigger */
+#letter-paper.letter-paper--unfolding {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease;
+    transform: scaleY(0.6);
+    opacity: 0.6;
+}
+
+/* Fully open */
+#letter-paper.letter-paper--open {
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.4, 1),
+                opacity 0.45s ease;
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+/* Subtle lined paper effect */
+#letter-paper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 31px,
+        rgba(0, 0, 0, 0.05) 31px,
+        rgba(0, 0, 0, 0.05) 32px
+    );
+    pointer-events: none;
+    top: clamp(28px, 5vw, 52px);
+}
+
+/* Left margin line */
+#letter-paper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: clamp(32px, 6vw, 64px);
+    width: 1px;
+    background: rgba(200, 120, 120, 0.15);
+    pointer-events: none;
+}
+
+/* ── Letter Body Text ─────────────────────────────────────────────────── */
+
+#letter-body {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-handwriting);
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    line-height: 2;            /* matches lined paper 32px rows at typical font sizes */
+    color: var(--color-ink);
+}
+
+.letter-paragraph {
+    margin: 0;
+    text-indent: 0;
+}
+
+/* ── Continue Button (inside letter scene) ───────────────────────────── */
+
+#letter-continue {
+    /* Uses .btn-continue from main.css */
+    /* Positioned below paper */
+    opacity: 0;
+    display: none;
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIMEN — An offline interactive experience">
+
+    <!--
+    ╔═══════════════════════════════════════════════════════════╗
+    ║  AIMEN — Birthday Experience                              ║
+    ║  index.html                                               ║
+    ║                                                           ║
+    ║  This file is the entry point.                            ║
+    ║  It contains ONLY structure — no logic.                   ║
+    ║  All logic lives in js/                                   ║
+    ║  All styles live in css/                                  ║
+    ║                                                           ║
+    ║  DO NOT put scene logic in this file.                     ║
+    ║  DO NOT add inline styles beyond display:none defaults.   ║
+    ╚═══════════════════════════════════════════════════════════╝
+
+    Script load order matters — do not reorder without reading js/app.js:
+      1. config.js        — must be first (everything else reads it)
+      2. debug.js         — must be second (logging used by all)
+      3. state.js         — global state
+      4. audioManager.js  — audio (reads config)
+      5. inputManager.js  — input events
+      6. transitionManager.js
+      7. components/      — reusable UI pieces
+      8. scenes/          — each scene module
+      9. sceneManager.js  — wires scenes
+     10. app.js           — must be last (calls SceneManager.init)
+    -->
+
+    <title>AIMEN</title>
+
+    <!-- ── Stylesheets ─────────────────────────────────────────────────── -->
+    <!-- All local. No CDNs. -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/terminal.css">
+    <link rel="stylesheet" href="css/butterfly.css">
+    <link rel="stylesheet" href="css/archive.css">
+    <link rel="stylesheet" href="css/letter.css">
+    <link rel="stylesheet" href="css/release.css">
+    <link rel="stylesheet" href="css/epilogue.css">
+</head>
+
+<body>
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: BOOT
+     Pure black. Auto-transitions to terminal.
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-boot" class="scene" style="background:#000;"></div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: TERMINAL
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-terminal" class="scene">
+        <div id="terminal-container">
+            <!-- Password prompt line -->
+            <div id="terminal-input-line">
+                <span class="terminal-prompt-label">PASSWORD REQUIRED:</span>
+                <div class="terminal-input-wrapper">
+                    <input
+                        id="terminal-input-field"
+                        type="text"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        aria-label="Enter password"
+                        placeholder=""
+                    >
+                    <span class="terminal-cursor">_</span>
+                </div>
+            </div>
+
+            <!-- Permission / Feedback message -->
+            <div id="terminal-feedback" style="display:none;"></div>
+
+            <!-- System Boot / Loading Sequence Container -->
+            <div id="terminal-boot-wrapper" style="display:none;">
+                <div id="terminal-boot-msg"></div>
+                <div id="terminal-loader" class="terminal-loader">
+                    <span class="loader-dot"></span>
+                    <span class="loader-dot"></span>
+                    <span class="loader-dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden — Enter key is primary submit mechanism -->
+        <button id="terminal-submit" tabindex="-1" aria-hidden="true"></button>
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: BUTTERFLY
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-butterfly" class="scene">
+
+        <!-- Moon -->
+        <div id="butterfly-moon" aria-hidden="true"></div>
+
+        <!-- Ground silhouettes -->
+        <div id="butterfly-silhouette" aria-hidden="true"></div>
+
+        <!--
+        Butterfly element.
+        PLACEHOLDER: The inner SVG will be replaced with a real asset.
+        To replace: swap the <svg> for an <img src="assets/images/butterfly.webp">
+        or a <video> element. butterflyScene.js drives the transform.
+        -->
+        <div id="butterfly-element" aria-hidden="true">
+            <svg class="butterfly-placeholder" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+                <!-- Left wings -->
+                <ellipse cx="18" cy="22" rx="14" ry="9"
+                    fill="rgba(74,158,255,0.55)"
+                    stroke="rgba(74,158,255,0.8)" stroke-width="0.8"
+                    transform="rotate(-20,18,22)"/>
+                <ellipse cx="14" cy="36" rx="10" ry="6"
+                    fill="rgba(74,158,255,0.4)"
+                    stroke="rgba(74,158,255,0.6)" stroke-width="0.6"
+                    transform="rotate(-10,14,36)"/>
+                <!-- Right wings -->
+                <ellipse cx="38" cy="22" rx="14" ry="9"
+                    fill="rgba(74,158,255,0.55)"
+                    stroke="rgba(74,158,255,0.8)" stroke-width="0.8"
+                    transform="rotate(20,38,22)"/>
+                <ellipse cx="42" cy="36" rx="10" ry="6"
+                    fill="rgba(74,158,255,0.4)"
+                    stroke="rgba(74,158,255,0.6)" stroke-width="0.6"
+                    transform="rotate(10,42,36)"/>
+                <!-- Body -->
+                <ellipse cx="28" cy="28" rx="2.5" ry="9"
+                    fill="rgba(200,216,240,0.9)"/>
+                <!-- Antennae -->
+                <line x1="28" y1="19" x2="21" y2="10" stroke="rgba(200,216,240,0.6)" stroke-width="0.8"/>
+                <line x1="28" y1="19" x2="35" y2="10" stroke="rgba(200,216,240,0.6)" stroke-width="0.8"/>
+                <circle cx="21" cy="10" r="1.5" fill="rgba(200,216,240,0.7)"/>
+                <circle cx="35" cy="10" r="1.5" fill="rgba(200,216,240,0.7)"/>
+            </svg>
+        </div>
+
+        <!-- Continue button — revealed after butterfly approaches -->
+        <button id="butterfly-continue" class="btn-continue">
+            [ CONTINUE ]
+        </button>
+
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: ARCHIVE
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-archive" class="scene">
+
+        <!-- Intro text: "There isn't much here..." -->
+        <p id="archive-intro-text" style="display:none;"></p>
+
+        <!-- Photo gallery — populated by archiveScene.js via PhotoFrame component -->
+        <div id="archive-gallery" style="display:none;"></div>
+
+        <!-- Outro narration lines -->
+        <div id="archive-outro-lines" style="display:none;"></div>
+
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: LETTER
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-letter" class="scene">
+
+        <!-- Narration (above/separate from paper) -->
+        <p id="letter-narration" style="display:none;"></p>
+
+        <!-- The physical letter -->
+        <div id="letter-paper">
+            <div id="letter-body">
+                <!-- Populated by letterScene.js from CONFIG.LETTER_CONTENT -->
+            </div>
+        </div>
+
+        <!-- Continue button — appears after reading time -->
+        <button id="letter-continue" class="btn-continue">
+            [ CONTINUE ]
+        </button>
+
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: RELEASE
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-release" class="scene">
+
+        <!--
+        Silver chain — elegant necklace representation.
+        PLACEHOLDER: Replace with SVG/image of real chain when asset available.
+        CSS in release.css handles states; JS adds classes.
+        -->
+        <div id="release-chain" aria-hidden="true"></div>
+
+        <!--
+        Butterfly — silver then blue glow.
+        PLACEHOLDER: Replace SVG with real asset (img or video).
+        -->
+        <div class="butterfly-release" id="release-butterfly" aria-hidden="true">
+            <svg class="butterfly-placeholder-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- Left wings — silver tones -->
+                <ellipse cx="25" cy="30" rx="20" ry="12"
+                    fill="rgba(192,200,216,0.7)"
+                    stroke="rgba(220,228,240,0.6)" stroke-width="0.8"
+                    transform="rotate(-18,25,30)"/>
+                <ellipse cx="19" cy="52" rx="14" ry="8"
+                    fill="rgba(192,200,216,0.5)"
+                    stroke="rgba(220,228,240,0.4)" stroke-width="0.6"
+                    transform="rotate(-10,19,52)"/>
+                <!-- Right wings -->
+                <ellipse cx="55" cy="30" rx="20" ry="12"
+                    fill="rgba(192,200,216,0.7)"
+                    stroke="rgba(220,228,240,0.6)" stroke-width="0.8"
+                    transform="rotate(18,55,30)"/>
+                <ellipse cx="61" cy="52" rx="14" ry="8"
+                    fill="rgba(192,200,216,0.5)"
+                    stroke="rgba(220,228,240,0.4)" stroke-width="0.6"
+                    transform="rotate(10,61,52)"/>
+                <!-- Body -->
+                <ellipse cx="40" cy="40" rx="3" ry="13"
+                    fill="rgba(228,232,240,0.95)"/>
+                <!-- Antennae -->
+                <line x1="40" y1="27" x2="30" y2="14" stroke="rgba(228,232,240,0.5)" stroke-width="0.8"/>
+                <line x1="40" y1="27" x2="50" y2="14" stroke="rgba(228,232,240,0.5)" stroke-width="0.8"/>
+                <circle cx="30" cy="14" r="2" fill="rgba(228,232,240,0.7)"/>
+                <circle cx="50" cy="14" r="2" fill="rgba(228,232,240,0.7)"/>
+            </svg>
+        </div>
+
+        <!-- "It's finally free." — synced with narrator audio -->
+        <p id="release-final-text" style="display:none;"></p>
+
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: EPILOGUE
+    ════════════════════════════════════════════════
+    -->
+    <div id="scene-epilogue" class="scene">
+        <div id="epilogue-lines">
+            <!-- Lines injected by epilogueScene.js from CONFIG.NARRATION -->
+        </div>
+    </div>
+
+
+    <!--
+    ════════════════════════════════════════════════
+     TRANSITION OVERLAY
+     Managed exclusively by transitionManager.js
+    ════════════════════════════════════════════════
+    -->
+    <div id="transition-overlay" aria-hidden="true"></div>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SCRIPTS — Load order is critical. See comment at top of file.
+    ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- 1. Config — must be first -->
+    <script src="js/config.js"></script>
+
+    <!-- 2. Debug — must be before state/managers -->
+    <script src="js/debug.js"></script>
+
+    <!-- 3. State -->
+    <script src="js/state.js"></script>
+
+    <!-- 4. Managers -->
+    <script src="js/audioManager.js"></script>
+    <script src="js/inputManager.js"></script>
+    <script src="js/transitionManager.js"></script>
+
+    <!-- 5. Components -->
+    <script src="js/components/photoFrame.js"></script>
+    <script src="js/components/butterfly.js"></script>
+
+    <!-- 6. Scenes — order does not matter here -->
+    <script src="js/scenes/bootScene.js"></script>
+    <script src="js/scenes/terminalScene.js"></script>
+    <script src="js/scenes/butterflyScene.js"></script>
+    <script src="js/scenes/archiveScene.js"></script>
+    <script src="js/scenes/letterScene.js"></script>
+    <script src="js/scenes/releaseScene.js"></script>
+    <script src="js/scenes/epilogueScene.js"></script>
+
+    <!-- 7. Scene Manager — after scenes are defined -->
+    <script src="js/sceneManager.js"></script>
+
+    <!-- 8. App — must be last -->
+    <script src="js/app.js"></script>
+
+</body>
+</html>

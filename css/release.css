@@ -1,0 +1,147 @@
+/*
+ * AIMEN — Release Scene CSS
+ * ==========================
+ * Silver butterfly with elegant chain. Cinematic release.
+ * Chain must read as elegant necklace, NOT imprisonment.
+ */
+
+#scene-release {
+    background:
+        radial-gradient(ellipse at 50% 55%,
+            #0a0e1a 0%,
+            #050709 60%,
+            #000000 100%
+        );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Chain ────────────────────────────────────────────────────────────── */
+/*
+ * PLACEHOLDER: The chain is currently a CSS representation.
+ * Replace with a real SVG or image asset when available.
+ * It should look like a delicate silver necklace.
+ */
+
+#release-chain {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--color-silver) 20%,
+        rgba(192, 200, 216, 0.9) 50%,
+        var(--color-silver) 80%,
+        transparent 100%
+    );
+    box-shadow: 0 0 6px rgba(192, 200, 216, 0.4);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform-origin: top center;
+}
+
+/* Chain link dots — simulate delicate chain links */
+#release-chain::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 6px,
+        rgba(192, 200, 216, 0.6) 6px,
+        rgba(192, 200, 216, 0.6) 8px
+    );
+}
+
+/* Release state — chain falls away */
+#release-chain.chain--released {
+    opacity: 0;
+    transform: translate(-50%, -40%) scaleY(0.3);
+    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+
+/* ── Butterfly (Release version) ─────────────────────────────────────── */
+
+.butterfly-release {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    transform-origin: center center;
+    filter: grayscale(1) brightness(0.8);   /* silver / unlit */
+    transition: filter 1.2s ease;
+    will-change: transform, filter;
+}
+
+/* Faint glow begins */
+.butterfly-release.butterfly--glowing-faint {
+    filter: grayscale(0.4) brightness(1.1)
+            drop-shadow(0 0 10px rgba(74, 158, 255, 0.4));
+}
+
+/* Full blue luminance */
+.butterfly-release.butterfly--glowing-full {
+    filter: grayscale(0)
+            brightness(1.4)
+            drop-shadow(0 0 24px rgba(74, 158, 255, 0.9))
+            drop-shadow(0 0 8px rgba(74, 158, 255, 1));
+    transition: filter 1.5s ease;
+}
+
+/* Ascending animation — butterfly flies up and out */
+.butterfly-release.butterfly--ascending {
+    animation: butterfly-ascend 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes butterfly-ascend {
+    0%   {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    60%  {
+        transform: translate(-50%, -140%) scale(1.15);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -260%) scale(0.4);
+        opacity: 0;
+    }
+}
+
+/* ── Final Text ───────────────────────────────────────────────────────── */
+
+#release-final-text {
+    position: absolute;
+    bottom: 26%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: rgba(200, 216, 240, 0.75);
+    text-align: center;
+    letter-spacing: 0.08em;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+/* ── Placeholder butterfly body ───────────────────────────────────────── */
+/* Used when CONFIG.ASSETS.butterfly is a placeholder */
+
+.butterfly-placeholder-svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--color-silver);
+    stroke: rgba(255,255,255,0.1);
+    stroke-width: 0.5;
+}

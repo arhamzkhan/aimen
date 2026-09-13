@@ -1,0 +1,162 @@
+/*
+ * AIMEN Experience — Main CSS
+ * ============================
+ * Base resets, global variables, layout foundations, and transition overlay.
+ * Scene-specific styles live in their own CSS files.
+ * Font imports must reference LOCAL assets only (assets/fonts/).
+ */
+
+/* ── Custom Properties ─────────────────────────────────────────────────── */
+:root {
+    --color-black:        #000000;
+    --color-near-black:   #06070a;
+    --color-deep-night:   #0a0c14;
+    --color-moonlight:    #c8d8f0;
+    --color-white:        #ffffff;
+    --color-off-white:    #f0ece4;
+    --color-blue-glow:    #4a9eff;
+    --color-blue-faint:   #1a3a6b;
+    --color-silver:       #c0c8d8;
+    --color-parchment:    #f5f0e8;
+    --color-parchment-dk: #e8e0d0;
+    --color-ink:          #2a2218;
+    --color-shadow:       rgba(0, 0, 0, 0.55);
+
+    --font-terminal:      "Courier New", Courier, monospace;
+    --font-handwriting:   "Handwriting", Georgia, serif; /* local font via @font-face */
+    --font-body:          Georgia, "Times New Roman", serif;
+    --font-ui:            system-ui, -apple-system, sans-serif;
+
+    --z-scenes:     1;
+    --z-overlay:    100;
+    --z-debug:      200;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    cursor: default;
+}
+
+/* ── Scene Containers ───────────────────────────────────────────────────── */
+/*
+ * All scene divs share this base style.
+ * Each scene is absolutely positioned, full-screen, hidden by default.
+ * Scenes show themselves in their enter() methods.
+ */
+.scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: none !important;
+    overflow: hidden;
+    z-index: var(--z-scenes);
+}
+
+.scene.active {
+    display: flex !important;
+}
+
+#scene-boot.active,
+#scene-butterfly.active,
+#scene-release.active {
+    display: block !important;
+}
+
+/* ── Transition Overlay ─────────────────────────────────────────────────── */
+/*
+ * Full-screen overlay for fade transitions.
+ * Managed exclusively by transitionManager.js — do NOT style elsewhere.
+ */
+#transition-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    opacity: 0;
+    display: none;
+    z-index: var(--z-overlay);
+    pointer-events: none;
+}
+
+/* ── Local Font Face ────────────────────────────────────────────────────── */
+/*
+ * Declare handwriting font. File must be placed in assets/fonts/.
+ * Replace "Handwriting.woff2" with actual filename when available.
+ * The experience works without this font (fallback to Georgia).
+ */
+@font-face {
+    font-family: "Handwriting";
+    src: url("../assets/fonts/handwriting.woff2") format("woff2"),
+         url("../assets/fonts/handwriting.woff")  format("woff");
+    font-weight: normal;
+    font-style:  normal;
+    font-display: swap;
+}
+
+/* ── Utility Classes ────────────────────────────────────────────────────── */
+.hidden   { display: none !important; }
+.invisible { opacity: 0; }
+.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* ── Reusable Continue Button ───────────────────────────────────────────── */
+.btn-continue {
+    display: inline-block;
+    padding: 12px 36px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease,
+                background 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+}
+
+.btn-continue:hover {
+    color: var(--color-blue-glow);
+    border-color: var(--color-blue-glow);
+    box-shadow: 0 0 16px rgba(74, 158, 255, 0.25);
+    background: rgba(74, 158, 255, 0.06);
+}
+
+/* ── Night Background Utility ───────────────────────────────────────────── */
+.night-bg {
+    background: radial-gradient(ellipse at 50% 30%,
+        #0d1528 0%,
+        #070a12 60%,
+        #000000 100%
+    );
+}
+
+/* ── Particle Canvas (shared) ───────────────────────────────────────────── */
+.particle-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.5;
+}

@@ -1,0 +1,154 @@
+/*
+ * AIMEN — Terminal Scene CSS
+ * ===========================
+ * Minimal, dark, old-school computer terminal.
+ * Pure black background, subtle monospaced typography, small text.
+ * No cards, no borders, no Matrix aesthetic, no excessive glow.
+ */
+
+#scene-terminal {
+    background: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 4vh 4vw;
+    color: #a0b0c0;
+    font-family: var(--font-terminal);
+}
+
+#terminal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* ── Password Prompt Line ─────────────────────────────────────────────── */
+
+#terminal-input-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    width: 100%;
+    font-family: var(--font-terminal);
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    color: #90a4b8;
+    letter-spacing: 0.05em;
+}
+
+.terminal-prompt-label {
+    flex-shrink: 0;
+    color: #90a4b8;
+}
+
+.terminal-input-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+#terminal-input-field {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #c0d0e0;
+    font-family: var(--font-terminal);
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    caret-color: transparent; /* custom cursor used instead */
+    letter-spacing: 0.08em;
+    width: 12ch;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    color: #90a4b8;
+    margin-left: 2px;
+    animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+}
+
+/* ── Feedback Message (Permission granted / Access denied) ───────────── */
+
+#terminal-feedback {
+    font-family: var(--font-terminal);
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    letter-spacing: 0.06em;
+    margin-top: 1vh;
+    transition: opacity 0.4s ease;
+}
+
+.terminal-feedback--granted {
+    color: #90c8a0;
+}
+
+.terminal-feedback--denied {
+    color: #c88080;
+}
+
+/* ── System Boot & Loading Sequence ───────────────────────────────────── */
+
+#terminal-boot-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#terminal-boot-msg {
+    font-family: var(--font-terminal);
+    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+    color: #889bb0;
+    letter-spacing: 0.08em;
+    text-align: center;
+    min-height: 2em;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+}
+
+/* Subtle Centered Mac-inspired Dot Loader */
+.terminal-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.loader-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #708498;
+    opacity: 0.25;
+    animation: loader-dot-pulse 1.2s ease-in-out infinite alternate;
+}
+
+.loader-dot:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.loader-dot:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+@keyframes loader-dot-pulse {
+    0%   { opacity: 0.2; transform: scale(0.85); }
+    100% { opacity: 0.85; transform: scale(1.15); }
+}
+
+/* Hidden submit button */
+#terminal-submit {
+    display: none;
+}
