@@ -1,9 +1,10 @@
 /*
  * AIMEN — Terminal Scene CSS
  * ===========================
- * Minimal, dark, old-school computer terminal.
- * Pure black background, subtle monospaced typography, small text.
- * No cards, no borders, no Matrix aesthetic, no excessive glow.
+ * Cinematic Hacker / Unix Terminal styled like authentic macOS Terminal.
+ * Pure pitch-black page, sharp micro-borders, authentic monospace typography,
+ * classic dark terminal green (#00B800) / red (#CC0000) colors (no neon glow),
+ * and a central cinematic text sequence with a Mac loading animation.
  */
 
 #scene-terminal {
@@ -17,60 +18,186 @@
     padding: 4vh 4vw;
     color: #a0b0c0;
     font-family: var(--font-terminal);
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-scenes);
+}
+
+/* ── macOS-style Window Chrome ────────────────────────────────────────── */
+
+#terminal-window {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 820px;
+    min-height: 400px;
+    background: #090a0d;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    box-shadow: 
+        0 30px 90px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    position: relative;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Window Dissolve transition on authentication success */
+#terminal-window.terminal-window--dissolve {
+    opacity: 0 !important;
+    transform: scale(0.96) translateY(-12px) !important;
+    filter: blur(8px) !important;
+    pointer-events: none;
+}
+
+#terminal-titlebar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 14px;
+    background: #141519;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    user-select: none;
+}
+
+.terminal-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.terminal-dot--red    { background: #ff5f57; border: 1px solid rgba(0,0,0,0.15); }
+.terminal-dot--yellow { background: #febc2e; border: 1px solid rgba(0,0,0,0.15); }
+.terminal-dot--green  { background: #28c840; border: 1px solid rgba(0,0,0,0.15); }
+
+.terminal-titlebar-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-terminal);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.42);
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 #terminal-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     width: 100%;
-    max-width: 600px;
-    text-align: center;
+    flex: 1;
+    padding: 32px 36px;
+    text-align: left;
+    font-family: var(--font-terminal);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #abb2bf;
+    background: radial-gradient(circle at 50% 0%, rgba(20, 25, 35, 0.3) 0%, rgba(9, 10, 13, 0) 70%);
 }
 
-/* ── Password Prompt Line ─────────────────────────────────────────────── */
+/* Log / Typewriter Output Container */
+#terminal-output {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+}
 
-#terminal-input-line {
+.terminal-line {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
     font-family: var(--font-terminal);
-    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
-    color: #90a4b8;
+    font-size: 0.95rem;
+    word-break: break-word;
+    color: #abb2bf;
+}
+
+.prompt-user {
+    color: #61afef;
+    font-weight: 600;
+}
+
+.prompt-cmd {
+    color: #00B800;
+}
+
+.terminal-system-msg {
+    color: #5c6370;
+    letter-spacing: 0.04em;
+}
+
+/* ── Classic Terminal Green Palette (#00B800 — No Neon Glow) ───────────── */
+
+.prompt-green {
+    color: #00B800 !important; /* Classic dark terminal green */
+    font-weight: 600;
     letter-spacing: 0.05em;
 }
 
-.terminal-prompt-label {
-    flex-shrink: 0;
-    color: #90a4b8;
+.green-text {
+    color: #00B800 !important;
+}
+
+.green-cursor {
+    color: #00B800 !important;
 }
 
 .terminal-input-wrapper {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    position: relative;
+    min-width: 160px;
+    height: 1.5em;
+    cursor: text;
 }
 
 #terminal-input-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 5;
     background: transparent;
     border: none;
     outline: none;
-    color: #c0d0e0;
+    color: transparent;
+    caret-color: transparent;
+    cursor: text;
+}
+
+.terminal-masked-text {
     font-family: var(--font-terminal);
-    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
-    caret-color: transparent; /* custom cursor used instead */
-    letter-spacing: 0.08em;
-    width: 12ch;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    z-index: 1;
+    user-select: none;
 }
 
 .terminal-cursor {
     display: inline-block;
-    color: #90a4b8;
+    font-weight: bold;
     margin-left: 2px;
     animation: cursor-blink 1s step-end infinite;
+    user-select: none;
 }
 
 @keyframes cursor-blink {
@@ -78,74 +205,87 @@
     50%      { opacity: 0; }
 }
 
-/* ── Feedback Message (Permission granted / Access denied) ───────────── */
+/* ── Password Results ─────────────────────────────────────────────────── */
 
-#terminal-feedback {
-    font-family: var(--font-terminal);
-    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+.terminal-granted {
+    color: #00B800 !important; /* Classic dark green ACCESS GRANTED */
+    font-weight: 600;
     letter-spacing: 0.06em;
-    margin-top: 1vh;
-    transition: opacity 0.4s ease;
+    margin-top: 10px;
+    animation: terminal-fade-in 0.3s ease forwards;
 }
 
-.terminal-feedback--granted {
-    color: #90c8a0;
+.terminal-denied {
+    color: #CC0000 !important; /* Classic dark red ACCESS DENIED */
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-top: 10px;
+    animation: terminal-fade-in 0.3s ease forwards;
 }
 
-.terminal-feedback--denied {
-    color: #c88080;
+@keyframes terminal-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── System Boot & Loading Sequence ───────────────────────────────────── */
+/* ── Cinematic Text Sequence & Mac Loading Animation ──────────────────── */
 
-#terminal-boot-wrapper {
+#cinematic-text-wrapper {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    background: #000000;
+    z-index: 10;
+    pointer-events: none;
+    padding: 20px;
 }
 
-#terminal-boot-msg {
+#cinematic-text-msg {
     font-family: var(--font-terminal);
-    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
-    color: #889bb0;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: #c0c8d8;
     letter-spacing: 0.08em;
     text-align: center;
+    max-width: 80vw;
     min-height: 2em;
-    transition: opacity 0.5s ease;
     opacity: 0;
+    transition: opacity 1s ease-in-out;
+    user-select: none;
 }
 
-/* Subtle Centered Mac-inspired Dot Loader */
-.terminal-loader {
+#cinematic-loader {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
+    margin-top: 48px;
 }
 
-.loader-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #708498;
-    opacity: 0.25;
-    animation: loader-dot-pulse 1.2s ease-in-out infinite alternate;
+#cinematic-loader-track {
+    width: 220px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
 }
 
-.loader-dot:nth-child(2) {
-    animation-delay: 0.25s;
+#cinematic-loader-indicator {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 35%;
+    border-radius: 2px;
+    background: rgba(220, 230, 245, 0.75);
+    animation: mac-loader-slide 2.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
-.loader-dot:nth-child(3) {
-    animation-delay: 0.5s;
-}
-
-@keyframes loader-dot-pulse {
-    0%   { opacity: 0.2; transform: scale(0.85); }
-    100% { opacity: 0.85; transform: scale(1.15); }
+@keyframes mac-loader-slide {
+    0%   { left: 0%; width: 20%; }
+    50%  { width: 45%; }
+    100% { left: 80%; width: 20%; }
 }
 
 /* Hidden submit button */

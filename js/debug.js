@@ -34,18 +34,35 @@ function debugError(category, message) {
  * Returns the scene name if found and SCENE_JUMP is enabled, else null.
  */
 function getDebugSceneJump() {
-    if (!CONFIG.DEBUG || !CONFIG.SCENE_JUMP) return null;
+    if (typeof CONFIG === "undefined" || !CONFIG.DEBUG || !CONFIG.SCENE_JUMP) return null;
+    var raw = null;
     try {
         var params = new URLSearchParams(window.location.search);
-        var scene  = params.get("scene");
-        if (scene) return scene.toLowerCase();
+        raw = params.get("scene");
     } catch (e) {
-        // URLSearchParams may fail in some edge cases under file://
-        // Fall back to manual parse
         var match = window.location.search.match(/[?&]scene=([^&]+)/);
-        if (match) return match[1].toLowerCase();
+        if (match) raw = match[1];
     }
-    return null;
+    if (!raw) return null;
+
+    var val = raw.toLowerCase().trim();
+
+    // Map numeric scene numbers to scene names — must mirror CONFIG.SCENE_ORDER.
+    // Current order: boot(0), terminal(1*), butterfly(2*), archive(3*), release(4*), epilogue(5*)
+    // *Practical debug shortcuts start at 1 for butterfly since boot/terminal are instant.
+    // "letter" scene has been removed from the flow — do NOT map any number to it.
+    var indexMap = {
+        "0": "terminal",
+        "1": "butterfly",
+        "2": "archive",
+        "3": "release",
+        "4": "epilogue"
+    };
+
+    if (indexMap[val]) {
+        return indexMap[val];
+    }
+    return val;
 }
 
 /**

@@ -31,13 +31,14 @@
         // Reset transition overlay
         Transition.reset();
 
-        // Register all scenes in order
+        // Register all scenes in order — must match CONFIG.SCENE_ORDER.
+        // NOTE: LetterScene intentionally omitted — removed from scene flow.
+        //       The Dear Aimen letter now lives inside ArchiveScene.
         SceneManager.init([
             BootScene,
             TerminalScene,
             ButterflyScene,
             ArchiveScene,
-            LetterScene,
             ReleaseScene,
             EpilogueScene,
         ]);

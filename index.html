@@ -57,45 +57,61 @@
 
 
     <!--
+    <!--
     ════════════════════════════════════════════════
      SCENE: TERMINAL
     ════════════════════════════════════════════════
     -->
     <div id="scene-terminal" class="scene">
-        <div id="terminal-container">
-            <!-- Password prompt line -->
-            <div id="terminal-input-line">
-                <span class="terminal-prompt-label">PASSWORD REQUIRED:</span>
-                <div class="terminal-input-wrapper">
-                    <input
-                        id="terminal-input-field"
-                        type="text"
-                        autocomplete="off"
-                        autocorrect="off"
-                        autocapitalize="off"
-                        spellcheck="false"
-                        aria-label="Enter password"
-                        placeholder=""
-                    >
-                    <span class="terminal-cursor">_</span>
+        <!-- Mac-style Terminal Window -->
+        <div id="terminal-window">
+            <div id="terminal-titlebar" aria-hidden="true">
+                <div class="terminal-dots">
+                    <span class="terminal-dot terminal-dot--red"></span>
+                    <span class="terminal-dot terminal-dot--yellow"></span>
+                    <span class="terminal-dot terminal-dot--green"></span>
                 </div>
+                <span class="terminal-titlebar-label">aimen — bash — 80×24</span>
             </div>
 
-            <!-- Permission / Feedback message -->
-            <div id="terminal-feedback" style="display:none;"></div>
+            <div id="terminal-container">
+                <!-- Log / Typewriter Output Container -->
+                <div id="terminal-output"></div>
 
-            <!-- System Boot / Loading Sequence Container -->
-            <div id="terminal-boot-wrapper" style="display:none;">
-                <div id="terminal-boot-msg"></div>
-                <div id="terminal-loader" class="terminal-loader">
-                    <span class="loader-dot"></span>
-                    <span class="loader-dot"></span>
-                    <span class="loader-dot"></span>
+                <!-- Password Prompt Row (GREEN) -->
+                <div id="terminal-prompt-row" class="terminal-line terminal-prompt-row" style="display:none;">
+                    <span id="terminal-prompt-label" class="prompt-green">ENTER PASSWORD:</span>
+                    <div class="terminal-input-wrapper">
+                        <input
+                            id="terminal-input-field"
+                            type="password"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            aria-label="Enter password"
+                        >
+                        <span id="terminal-masked-display" class="terminal-masked-text prompt-green"></span>
+                        <span class="terminal-cursor prompt-green">_</span>
+                    </div>
+                </div>
+
+                <!-- Feedback Line (ACCESS GRANTED in green / ACCESS DENIED in red) -->
+                <div id="terminal-feedback" class="terminal-line" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Cinematic Text Sequence Container (displayed on pure black background after terminal fades) -->
+        <div id="cinematic-text-wrapper" style="display:none;">
+            <div id="cinematic-text-msg"></div>
+            <div id="cinematic-loader" class="terminal-loader">
+                <div id="cinematic-loader-track">
+                    <div id="cinematic-loader-indicator"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Hidden — Enter key is primary submit mechanism -->
+        <!-- Hidden submit button for form accessibility -->
         <button id="terminal-submit" tabindex="-1" aria-hidden="true"></button>
     </div>
 
@@ -105,52 +121,152 @@
      SCENE: BUTTERFLY
     ════════════════════════════════════════════════
     -->
+    <!--
+    ════════════════════════════════════════════════
+     SCENE: BUTTERFLY (SCENE 1)
+    ════════════════════════════════════════════════
+    -->
     <div id="scene-butterfly" class="scene">
 
-        <!-- Moon -->
-        <div id="butterfly-moon" aria-hidden="true"></div>
+        <!-- Sparse Natural Stars -->
+        <div id="butterfly-stars" aria-hidden="true"></div>
 
-        <!-- Ground silhouettes -->
-        <div id="butterfly-silhouette" aria-hidden="true"></div>
+        <!-- Organic Tree Branch Silhouette (roots off-screen left, branch enters scene) -->
+        <div id="butterfly-tree" aria-hidden="true">
+            <!--
+                viewBox 0 0 1920 1080 = 16:9 reference space.
+                preserveAspectRatio="xMidYMid slice" fills the container always.
+                Branch starts well off the left edge (x < 0) and reaches ~55% across.
+                Stroke colors are genuine charcoal (#2e3238, #3d4249) — clearly visible.
+                NO glow. NO drop-shadow. Ambient edge highlight is rgba white, very subtle.
+            -->
+            <svg class="tree-branch-svg"
+                 viewBox="-160 0 1920 1080"
+                 preserveAspectRatio="xMidYMid slice"
+                 xmlns="http://www.w3.org/2000/svg">
 
-        <!--
-        Butterfly element.
-        PLACEHOLDER: The inner SVG will be replaced with a real asset.
-        To replace: swap the <svg> for an <img src="assets/images/butterfly.webp">
-        or a <video> element. butterflyScene.js drives the transform.
-        -->
-        <div id="butterfly-element" aria-hidden="true">
-            <svg class="butterfly-placeholder" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
-                <!-- Left wings -->
-                <ellipse cx="18" cy="22" rx="14" ry="9"
-                    fill="rgba(74,158,255,0.55)"
-                    stroke="rgba(74,158,255,0.8)" stroke-width="0.8"
-                    transform="rotate(-20,18,22)"/>
-                <ellipse cx="14" cy="36" rx="10" ry="6"
-                    fill="rgba(74,158,255,0.4)"
-                    stroke="rgba(74,158,255,0.6)" stroke-width="0.6"
-                    transform="rotate(-10,14,36)"/>
-                <!-- Right wings -->
-                <ellipse cx="38" cy="22" rx="14" ry="9"
-                    fill="rgba(74,158,255,0.55)"
-                    stroke="rgba(74,158,255,0.8)" stroke-width="0.8"
-                    transform="rotate(20,38,22)"/>
-                <ellipse cx="42" cy="36" rx="10" ry="6"
-                    fill="rgba(74,158,255,0.4)"
-                    stroke="rgba(74,158,255,0.6)" stroke-width="0.6"
-                    transform="rotate(10,42,36)"/>
-                <!-- Body -->
-                <ellipse cx="28" cy="28" rx="2.5" ry="9"
-                    fill="rgba(200,216,240,0.9)"/>
-                <!-- Antennae -->
-                <line x1="28" y1="19" x2="21" y2="10" stroke="rgba(200,216,240,0.6)" stroke-width="0.8"/>
-                <line x1="28" y1="19" x2="35" y2="10" stroke="rgba(200,216,240,0.6)" stroke-width="0.8"/>
-                <circle cx="21" cy="10" r="1.5" fill="rgba(200,216,240,0.7)"/>
-                <circle cx="35" cy="10" r="1.5" fill="rgba(200,216,240,0.7)"/>
+                <!-- ── Background secondary branch (slightly above, thinner) ── -->
+                <path d="M -160,560
+                         C -60,530  80,495  200,465
+                         C 300,445  400,438  490,440
+                         C 560,442  620,450  680,462"
+                      fill="none"
+                      stroke="#222730"
+                      stroke-width="18"
+                      stroke-linecap="round"/>
+
+                <path d="M 200,465 C 230,420 265,375 295,340"
+                      fill="none" stroke="#1e2228" stroke-width="9" stroke-linecap="round"/>
+
+                <!-- ── Main branch — thick, clearly visible ─────────────────── -->
+                <!-- Outer dark shadow stroke (bottom) -->
+                <path d="M -160,640
+                         C -50,600  90,555  220,520
+                         C 340,490  460,488  570,494
+                         C 660,500  740,516  810,535"
+                      fill="none"
+                      stroke="#1a1d22"
+                      stroke-width="42"
+                      stroke-linecap="round"/>
+
+                <!-- Main body stroke — charcoal -->
+                <path d="M -160,636
+                         C -50,597  90,552  220,518
+                         C 340,488  460,486  570,492
+                         C 650,497  728,512  795,530"
+                      fill="none"
+                      stroke="#2e3238"
+                      stroke-width="34"
+                      stroke-linecap="round"/>
+
+                <!-- Core lighter stripe — gives branch dimension/roundness -->
+                <path d="M -160,630
+                         C -55,593  88,548  218,514
+                         C 338,484  458,483  566,489
+                         C 642,494  716,508  778,524"
+                      fill="none"
+                      stroke="#3a4048"
+                      stroke-width="20"
+                      stroke-linecap="round"/>
+
+                <!-- Subtle top edge highlight — dim silver-white rim light -->
+                <path d="M -140,622
+                         C -48,586  86,542  214,509
+                         C 334,480  454,479  562,485
+                         C 634,490  704,502  762,517"
+                      fill="none"
+                      stroke="rgba(200,210,225,0.10)"
+                      stroke-width="2.5"
+                      stroke-linecap="round"/>
+
+                <!-- ── Twig 1 — upper-left fork ────────────────────────────── -->
+                <path d="M 180,534
+                         C 205,480 240,420 280,368
+                         C 308,330 340,300 375,278"
+                      fill="none" stroke="#2a2f36" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 280,368
+                         C 305,345 335,328 365,316"
+                      fill="none" stroke="#2a2f36" stroke-width="6" stroke-linecap="round"/>
+                <!-- Twig 1 highlight -->
+                <path d="M 182,530
+                         C 207,476 242,416 282,365
+                         C 310,327 342,298 377,276"
+                      fill="none" stroke="rgba(200,210,225,0.07)" stroke-width="1.5" stroke-linecap="round"/>
+
+                <!-- ── Twig 2 — middle, near landing area ─────────────────── -->
+                <path d="M 420,490
+                         C 455,448 495,408 538,378"
+                      fill="none" stroke="#272c32" stroke-width="10" stroke-linecap="round"/>
+                <path d="M 480,435
+                         C 510,418 540,408 572,402"
+                      fill="none" stroke="#272c32" stroke-width="5" stroke-linecap="round"/>
+
+                <!-- ── Twig 3 — lower tip drooping ────────────────────────── -->
+                <path d="M 680,520
+                         C 720,538 762,558 800,578"
+                      fill="none" stroke="#252a30" stroke-width="8" stroke-linecap="round"/>
+
+                <!-- ── Leaves — muted dark silhouettes with slight gray tint ─ -->
+                <!-- Leaf cluster on Twig 1 top -->
+                <ellipse cx="375" cy="272" rx="14" ry="8"
+                         fill="#1e2430" transform="rotate(-38,375,272)"/>
+                <ellipse cx="365" cy="310" rx="11" ry="7"
+                         fill="#1c2230" transform="rotate(-28,365,310)"/>
+                <ellipse cx="295" cy="338" rx="10" ry="6"
+                         fill="#1c2230" transform="rotate(-22,295,338)"/>
+
+                <!-- Leaf cluster on Twig 2 -->
+                <ellipse cx="538" cy="372" rx="12" ry="7"
+                         fill="#1d2330" transform="rotate(-45,538,372)"/>
+                <ellipse cx="572" cy="396" rx="10" ry="6"
+                         fill="#1c2130" transform="rotate(-30,572,396)"/>
+
+                <!-- Leaf on drooping twig 3 -->
+                <ellipse cx="802" cy="574" rx="11" ry="6"
+                         fill="#1a2030" transform="rotate(25,802,574)"/>
+
+                <!-- ── Landing spot marker (invisible helper for JS) ───────── -->
+                <!--
+                    The butterfly lands ON the branch top surface.
+                    Approximate screen coords at 1920x1080: branch center at ~48% across, ~47% down.
+                    butterflyScene.js reads this element's getBoundingClientRect().
+                    At 1920px wide: x = 0.48*1920 = 922 in viewBox coords → 922-160 = 762
+                    In this viewBox (-160,0,1920,1080): x≈520, y≈482 is mid-branch
+                -->
+                <circle id="branch-landing-spot" cx="520" cy="480" r="4"
+                        fill="none" stroke="none"/>
+
             </svg>
         </div>
 
-        <!-- Continue button — revealed after butterfly approaches -->
+        <!-- Atmospheric haze/fog -->
+        <div id="butterfly-fog-1" class="butterfly-fog" aria-hidden="true"></div>
+        <div id="butterfly-fog-2" class="butterfly-fog" aria-hidden="true"></div>
+
+        <!-- Silver SVG Butterfly Mount Point -->
+        <div id="butterfly-element" aria-hidden="true"></div>
+
+        <!-- Minimal Atmospheric [ CONTINUE ] Button -->
         <button id="butterfly-continue" class="btn-continue">
             [ CONTINUE ]
         </button>
@@ -160,19 +276,24 @@
 
     <!--
     ════════════════════════════════════════════════
-     SCENE: ARCHIVE
+     SCENE: ARCHIVE (SCENE 2)
     ════════════════════════════════════════════════
     -->
     <div id="scene-archive" class="scene">
 
-        <!-- Intro text: "There isn't much here..." -->
+        <!-- Line 1 & Line 2 -->
         <p id="archive-intro-text" style="display:none;"></p>
 
-        <!-- Photo gallery — populated by archiveScene.js via PhotoFrame component -->
+        <!-- Image Placeholders 1, 2, 3 (Sequential) -->
         <div id="archive-gallery" style="display:none;"></div>
 
-        <!-- Outro narration lines -->
-        <div id="archive-outro-lines" style="display:none;"></div>
+        <!-- Final letter shown after the 3 images -->
+        <div id="archive-letter" style="display:none;" aria-live="polite"></div>
+
+        <!-- Single [ NEXT ] Button — appears after letter -->
+        <button id="archive-next-btn" class="btn-continue" style="display:none;">
+            [ NEXT ]
+        </button>
 
     </div>
 

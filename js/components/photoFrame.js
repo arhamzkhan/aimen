@@ -40,16 +40,21 @@ var PhotoFrame = (function() {
         img.alt       = opts.caption || "Memory";
         img.loading   = "lazy";
 
+        var imgNum = (opts.index !== undefined ? opts.index + 1 : 1);
+        var labelText = "Image " + imgNum;
+
         if (opts.src && opts.src.indexOf("PLACEHOLDER") === -1) {
             img.src = opts.src;
             img.onerror = function() {
                 img.style.display = "none";
                 inner.classList.add("photo-frame__inner--missing");
+                inner.setAttribute("data-label", labelText);
             };
         } else {
-            // Placeholder: don't set src, show placeholder state
+            // Placeholder frame
             img.style.display = "none";
             inner.classList.add("photo-frame__inner--placeholder");
+            inner.setAttribute("data-label", labelText);
         }
 
         inner.appendChild(img);

@@ -20,12 +20,13 @@ const CONFIG = {
 
     // ── Scene Order ───────────────────────────────────────────────────────
     // Controls the linear progression. Reorder to rearrange the experience.
+    // NOTE: "letter" scene removed — the Dear Aimen letter now lives inside
+    //       archive (Scene 2) as its final phase. archive → release directly.
     SCENE_ORDER: [
         "boot",
         "terminal",
         "butterfly",
         "archive",
-        "letter",
         "release",
         "epilogue"
     ],
@@ -68,17 +69,42 @@ const CONFIG = {
 
     // ── Terminal Lines ────────────────────────────────────────────────────
     TERMINAL: {
-        PROMPT_TEXT:  "PASSWORD REQUIRED:",
-        GRANTED_TEXT: "Permission granted.",
-        DENIED_TEXT:   "Access denied.",
-        BOOT_SEQUENCE: [
-            "INITIALIZING ARCHIVE...",
-            "CONNECTING TO MEMORY STORAGE...",
-            "SEARCHING FOR FRAGMENTS...",
-            "RESTORING ARCHIVE...",
-            "SYSTEM READY"
+        PROMPT_LABEL:  "ENTER PASSWORD:",
+        COMMAND_LINE:  "aimen@archive ~ % establish_session",
+        AUTH_TEXT:     "[SYSTEM AUTHENTICATION REQUIRED]",
+        GRANTED_TEXT:  "ACCESS GRANTED",
+        DENIED_TEXT:   "ACCESS DENIED — INCORRECT PASSWORD",
+        INIT_LINES: [
+            "aimen@archive ~ % establish_session --secure",
+            "[SYS] Initializing core environment...",
+            "[SYS] Mounting Virtual Archive [/dev/disk2s1]...",
+            "[SYS] Security protocols loaded."
+        ],
+        BLACK_SEQUENCE: [
+            "Getting things ready for you...",
+            "Preparing your environment...",
+            "Loading core systems...",
+            "Establishing secure connection...",
+            "Initializing Aimen...",
+            "Almost there..."
         ]
     },
+
+    // ── Archive Scene Letter ──────────────────────────────────────────────
+    // The final letter shown at the end of Scene 2, before [ NEXT ] to Scene 3.
+    ARCHIVE_LETTER: [
+        "Dear Aimen,",
+        "",
+        "Some things are difficult to put into words,",
+        "so I decided to let this little journey say them for me.",
+        "",
+        "If you're reading this, you made it this far.",
+        "And honestly, that's exactly where I wanted you to be.",
+        "",
+        "There's still more waiting for you.",
+        "",
+        "— A"
+    ],
 
     // ── Letter ────────────────────────────────────────────────────────────
     // Replace PLACEHOLDER with the real letter text when ready.

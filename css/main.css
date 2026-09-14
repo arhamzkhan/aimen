@@ -22,7 +22,7 @@
     --color-ink:          #2a2218;
     --color-shadow:       rgba(0, 0, 0, 0.55);
 
-    --font-terminal:      "Courier New", Courier, monospace;
+    --font-terminal:      "SF Mono", "Menlo", "Monaco", "Cascadia Code", "Fira Code", "Courier New", Courier, monospace;
     --font-handwriting:   "Handwriting", Georgia, serif; /* local font via @font-face */
     --font-body:          Georgia, "Times New Roman", serif;
     --font-ui:            system-ui, -apple-system, sans-serif;
@@ -136,10 +136,9 @@ html, body {
 }
 
 .btn-continue:hover {
-    color: var(--color-blue-glow);
-    border-color: var(--color-blue-glow);
-    box-shadow: 0 0 16px rgba(74, 158, 255, 0.25);
-    background: rgba(74, 158, 255, 0.06);
+    color: rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* ── Night Background Utility ───────────────────────────────────────────── */

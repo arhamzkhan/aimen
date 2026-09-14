@@ -1,120 +1,134 @@
 /*
- * AIMEN — Archive Scene CSS
- * ==========================
- * Memory / archive environment styling.
- * Photo frames, intro text, outro narration.
+ * AIMEN — Archive Scene CSS (Scene 2)
+ * ====================================
+ * Single deterministic timeline:
+ *   Line 1 → Line 2 → Image 1 Placeholder → Image 2 Placeholder → Image 3 Placeholder → Existing Message → [ NEXT ]
  */
 
 #scene-archive {
-    background:
-        radial-gradient(ellipse at 50% 30%,
-            #0e1420 0%,
-            #060810 70%,
-            #000000 100%
-        );
+    background: radial-gradient(ellipse at 50% 30%, #141a26 0%, #090d16 70%, #030508 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
     padding: 6vh 6vw;
+    z-index: var(--z-scenes);
 }
 
-/* ── Intro / Outro text ──────────────────────────────────────────────── */
+/* ── Line 1 & Line 2 ─────────────────────────────────────────────────── */
 
 #archive-intro-text {
     font-family: var(--font-body);
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    color: rgba(200, 216, 240, 0.65);
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    color: rgba(220, 232, 248, 0.75);
     text-align: center;
-    white-space: pre-line;
     line-height: 1.8;
-    letter-spacing: 0.04em;
-    max-width: 520px;
+    letter-spacing: 0.05em;
+    max-width: 580px;
+    margin: auto;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+    user-select: none;
 }
 
-#archive-outro-lines {
-    text-align: center;
-    max-width: 560px;
-}
-
-.archive-outro-line {
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-    color: rgba(200, 216, 240, 0.6);
-    line-height: 1.9;
-    letter-spacing: 0.03em;
-    transition: opacity 1.2s ease;
-    font-style: italic;
-}
-
-/* ── Gallery ─────────────────────────────────────────────────────────── */
+/* ── Image Placeholders (Sequential One at a time) ────────────────────── */
 
 #archive-gallery {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: clamp(20px, 4vw, 60px);
-    flex-wrap: wrap;
-    padding: 2vh 0;
-}
-
-/* ── Photo Frame Component ───────────────────────────────────────────── */
-
-.photo-frame {
-    flex-shrink: 0;
-    transition: opacity 1.4s ease;
-}
-
-.photo-frame__inner {
-    background: var(--color-parchment-dk);
-    padding: 12px 12px 40px 12px;
-    box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.7),
-        0 1px 4px rgba(0, 0, 0, 0.5),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    width: 100%;
+    height: 100%;
     position: relative;
-    transform: rotate(var(--frame-rotation, 0deg));
+    margin: auto;
 }
 
-/* Stagger rotation for natural look */
-.photo-frame[data-index="0"] { --frame-rotation: -1.5deg; }
-.photo-frame[data-index="1"] { --frame-rotation:  0.5deg; }
-.photo-frame[data-index="2"] { --frame-rotation:  2deg;   }
-
-.photo-frame__img {
-    display: block;
-    width: clamp(140px, 22vw, 260px);
-    height: clamp(140px, 22vw, 260px);
-    object-fit: cover;
-    object-position: center;
+#archive-gallery .photo-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+    margin: 0;
 }
 
-/* Placeholder frame when image is missing */
 .photo-frame__inner--placeholder,
 .photo-frame__inner--missing {
-    background: #1a1a20;
-    border: 1px dashed rgba(200, 216, 240, 0.2);
+    background: #141822;
+    border: 1px dashed rgba(200, 216, 240, 0.25);
+    padding: 12px 12px 36px 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
-.photo-frame__inner--placeholder::before {
-    content: "[ photo ]";
+.photo-frame__inner--placeholder::before,
+.photo-frame__inner--missing::before {
+    content: attr(data-label);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(140px, 22vw, 260px);
-    height: clamp(140px, 22vw, 260px);
-    color: rgba(200, 216, 240, 0.2);
+    width: clamp(160px, 24vw, 260px);
+    height: clamp(160px, 24vw, 260px);
+    color: rgba(200, 216, 240, 0.35);
     font-family: var(--font-terminal);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-.photo-frame__caption {
+/* ── Final Letter (After Image 3) ────────────────────────────────────── */
+
+#archive-letter {
     text-align: center;
-    font-family: var(--font-handwriting);
-    font-size: 0.8rem;
-    color: var(--color-ink);
-    opacity: 0.6;
-    margin-top: 8px;
+    max-width: 520px;
+    width: 100%;
+    margin: auto;
+    padding: 0 2vw;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.archive-letter-line {
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: rgba(215, 228, 245, 0.82);
+    line-height: 1.9;
+    letter-spacing: 0.03em;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    min-height: 1.9em; /* preserves blank lines */
+}
+
+/* Salutation / signature — slightly distinguished */
+.archive-letter-line--salutation,
+.archive-letter-line--signature {
+    font-style: normal;
+    color: rgba(215, 228, 245, 0.65);
+    letter-spacing: 0.06em;
+}
+
+.archive-letter-line--salutation {
+    margin-bottom: 0.6em;
+}
+
+.archive-letter-line--signature {
+    margin-top: 0.8em;
+}
+
+/* ── Next Button ─────────────────────────────────────────────────────── */
+
+#archive-next-btn {
+    margin-top: 24px;
+    z-index: 10;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.8s ease, border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
 }

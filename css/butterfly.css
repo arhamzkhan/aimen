@@ -1,34 +1,27 @@
 /*
  * AIMEN — Butterfly Scene CSS
  * ============================
- * Dark night environment with moonlight.
- * Butterfly element styles and organic glow.
- * Modify without touching terminal or archive styles.
- */
-
-/*
- * AIMEN — Butterfly Scene CSS
- * ============================
- * Cinematic, mysterious dark night environment with moonlight and depth.
- * Contains all atmospheric layers, camera movement containers, and 3D butterfly flapping.
+ * Cinematic, atmospheric dark night environment with a natural distant moon,
+ * understated stars, subtle haze, forest horizon silhouette, and smooth parallax flight.
+ * Does NOT touch terminal or intro sequence styles.
  */
 
 #scene-butterfly {
-    background: radial-gradient(circle at 50% 22%, #080d1a 0%, #03050a 65%, #000000 100%);
+    background: radial-gradient(ellipse at 35% 35%, #080d18 0%, #03050a 60%, #010204 100%);
     overflow: hidden;
-    /* NOTE: perspective removed — it flattens preserve-3d children that have filter ancestors */
+    position: absolute;
+    inset: 0;
 }
 
-/* ── Stars Layer ───────────────────────────────────────────────────────── */
+/* ── Natural Stars (Clearly visible, sparse) ─────────────────────────── */
 #butterfly-stars {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 65%;
+    height: 80%;
     pointer-events: none;
     z-index: 1;
-    will-change: transform;
 }
 
 .butterfly-star {
@@ -36,429 +29,357 @@
     background: #ffffff;
     border-radius: 50%;
     opacity: 0;
-    animation: star-twinkle var(--twinkle-duration) ease-in-out infinite alternate;
+    animation: star-twinkle var(--twinkle-duration, 6s) ease-in-out infinite alternate;
 }
 
 @keyframes star-twinkle {
     0% {
-        opacity: 0.15;
-        transform: scale(0.8);
+        opacity: var(--min-opacity, 0.35);
+        transform: scale(0.85);
     }
     100% {
-        opacity: 0.85;
-        transform: scale(1.2);
+        opacity: var(--max-opacity, 0.72);
+        transform: scale(1.08);
     }
 }
 
-/* ── Moon ──────────────────────────────────────────────────────────────── */
-#butterfly-moon {
+/* ── Organic Tree Branch (from off-screen left into scene) ────────────── */
+#butterfly-tree {
     position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: clamp(70px, 9vw, 110px);
-    height: clamp(70px, 9vw, 110px);
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%,
-        #ffffff 0%,
-        #dbe6f8 35%,
-        rgba(195, 215, 245, 0.35) 75%,
-        transparent 100%
-    );
-    box-shadow:
-        0 0 45px rgba(195, 215, 245, 0.22),
-        0 0 90px rgba(195, 215, 245, 0.12),
-        0 0 160px rgba(195, 215, 245, 0.06);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    z-index: 2;
-    will-change: transform;
+    z-index: 5;
+    overflow: visible;
 }
 
-/* ── Fog & Mist ────────────────────────────────────────────────────────── */
+.tree-branch-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* ── Subtle Atmospheric Haze ─────────────────────────────────────────── */
 .butterfly-fog {
     position: absolute;
-    bottom: 8%;
-    left: -50%;
-    width: 200%;
-    height: 38%;
-    background: linear-gradient(to top, rgba(74, 158, 255, 0.04) 0%, rgba(74, 158, 255, 0.01) 60%, transparent 100%);
+    bottom: 0%;
+    left: -40%;
+    width: 180%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(10, 16, 28, 0.05) 0%, rgba(4, 7, 14, 0.01) 70%, transparent 100%);
     pointer-events: none;
-    z-index: 3;
+    z-index: 2;
     filter: blur(25px);
 }
 
 #butterfly-fog-1 {
-    animation: fog-sweep-1 45s linear infinite;
+    animation: fog-sweep-1 65s ease-in-out infinite alternate;
 }
 
 #butterfly-fog-2 {
-    animation: fog-sweep-2 65s linear infinite;
-    bottom: 4%;
-    height: 44%;
-    background: linear-gradient(to top, rgba(200, 216, 240, 0.03) 0%, rgba(200, 216, 240, 0.01) 70%, transparent 100%);
+    animation: fog-sweep-2 90s ease-in-out infinite alternate;
+    bottom: -5%;
+    height: 48%;
+    background: linear-gradient(to top, rgba(130, 155, 185, 0.015) 0%, transparent 80%);
 }
 
 @keyframes fog-sweep-1 {
     0%   { transform: translateX(0); }
-    50%  { transform: translateX(18%); }
-    100% { transform: translateX(0); }
+    100% { transform: translateX(10%); }
 }
 
 @keyframes fog-sweep-2 {
-    0%   { transform: translateX(12%); }
-    50%  { transform: translateX(-12%); }
-    100% { transform: translateX(12%); }
+    0%   { transform: translateX(6%); }
+    100% { transform: translateX(-6%); }
 }
 
-/* ── Silhouette Layer ─────────────────────────────────────────────────── */
-#butterfly-silhouette {
-    position: absolute;
-    bottom: 18%;
-    left: -10%;
-    width: 120%;
-    height: 20%;
-    background: transparent;
-    pointer-events: none;
-    z-index: 4;
-    will-change: transform;
-}
+/* ── Silver Butterfly Component ───────────────────────────────────────── */
 
-/* We inject a beautiful SVG horizon line dynamically or draw a simple smooth CSS path */
-.silhouette-hills {
-    width: 100%;
-    height: 100%;
-    fill: #010204;
-}
-
-/* ── Water & Reflections ──────────────────────────────────────────────── */
-#butterfly-water {
-    position: absolute;
-    bottom: 0;
-    left: -10%;
-    width: 120%;
-    height: 22%;
-    background: linear-gradient(to bottom, #010204 0%, #000000 100%);
-    border-top: 1px solid rgba(74, 158, 255, 0.12);
-    pointer-events: none;
-    z-index: 5;
-    overflow: hidden;
-    will-change: transform;
-}
-
-#butterfly-water-reflection {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: clamp(140px, 15vw, 220px);
-    height: 100%;
-    background: linear-gradient(to right,
-        transparent 0%,
-        rgba(210, 225, 250, 0.05) 30%,
-        rgba(210, 225, 250, 0.08) 50%,
-        rgba(210, 225, 250, 0.05) 70%,
-        transparent 100%
-    );
-    filter: blur(5px);
-    animation: reflection-shimmer 9s ease-in-out infinite alternate;
-}
-
-@keyframes reflection-shimmer {
-    0%   { opacity: 0.5; transform: translateX(-52%) scaleX(0.85); }
-    100% { opacity: 0.95; transform: translateX(-48%) scaleX(1.15); }
-}
-
-#butterfly-water-ripples {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.water-ripple {
-    position: absolute;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(74, 158, 255, 0.16), transparent);
-    border-radius: 50%;
-    transform-origin: center center;
-    animation: ripple-wave var(--ripple-dur) linear infinite;
-    opacity: 0;
-}
-
-@keyframes ripple-wave {
-    0% {
-        transform: scaleX(0.1);
-        opacity: 0;
-    }
-    15% {
-        opacity: 0.45;
-    }
-    85% {
-        opacity: 0.45;
-    }
-    100% {
-        transform: scaleX(1.4);
-        opacity: 0;
-    }
-}
-
-/* ── Soft Firefly Particles ───────────────────────────────────────────── */
-#butterfly-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 6;
-}
-
-.butterfly-particle {
-    position: absolute;
-    background: rgba(145, 190, 255, 0.55);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(74, 158, 255, 0.85);
-    pointer-events: none;
-    animation: particle-float var(--float-dur) ease-in-out infinite;
-}
-
-@keyframes particle-float {
-    0% {
-        transform: translateY(0) translateX(0) scale(0);
-        opacity: 0;
-    }
-    15% {
-        opacity: var(--max-opacity);
-        transform: translateY(-20vh) translateX(var(--drift-1)) scale(1);
-    }
-    80% {
-        opacity: var(--max-opacity);
-        transform: translateY(-80vh) translateX(var(--drift-2)) scale(0.85);
-    }
-    100% {
-        transform: translateY(-105vh) translateX(var(--drift-3)) scale(0);
-        opacity: 0;
-    }
-}
-
-/* ── Foreground Swaying Grass ────────────────────────────────────────── */
-#butterfly-foreground-grass {
-    position: absolute;
-    bottom: 0;
-    left: -2%;
-    width: 104%;
-    height: 18%;
-    pointer-events: none;
-    z-index: 7; /* Placed in front of water and button for extreme depth! */
-    will-change: transform;
-}
-
-.grass-blade {
-    position: absolute;
-    bottom: -8px;
-    background: linear-gradient(to top, #000000 15%, #020408 65%, rgba(6, 12, 22, 0.75) 100%);
-    transform-origin: bottom center;
-    animation: grass-sway var(--sway-dur) ease-in-out infinite alternate;
-}
-
-@keyframes grass-sway {
-    0% {
-        transform: rotate(-1.5deg) skewX(-1.5deg);
-    }
-    100% {
-        transform: rotate(2deg) skewX(2deg);
-    }
-}
-
-/* ── Butterfly Element ─────────────────────────────────────────────────── */
 /*
- * IMPORTANT: Do NOT add filter: here.
- * filter creates a stacking context that flattens transform-style: preserve-3d
- * inside all children — the wings' rotateY() collapses to zero width and disappears.
- * Glow is applied via box-shadow on .butterfly-component instead.
+ * .butterfly-root   — the positioned div whose transform butterflyScene.js drives
+ * .butterfly-inner  — carries animation state classes; wraps the SVG
+ * .butterfly-svg    — the actual SVG element (fills inner)
  *
- * IMPORTANT: overflow must be visible (or unset).
- * The .butterfly-component inside uses translate3d to position the butterfly
- * across the viewport. Clipping at 80x80 would hide it.
+ * Wing animation is CSS-only.
+ * Three states: bfly-state-fly, bfly-state-hover, bfly-state-rest
+ * The JS component sets --flap-upper-dur and --flap-lower-dur on .butterfly-inner
+ * to override speed at runtime.
  */
-#butterfly-element {
+
+/* Root — positioned by butterflyScene via translate3d/rotate/scale */
+.butterfly-root {
     position: absolute;
     top: 0;
     left: 0;
-    width: 0;       /* zero-size container — child positions itself via translate3d */
+    width: 0;
     height: 0;
     pointer-events: none;
+    will-change: transform;
     overflow: visible;
-    z-index: 10;    /* In front of foreground grass (z-index 7) */
 }
 
-
-
-/* Enhanced glow state when hover is active near button.
- * Animates the ::after glow layer — avoids filter on preserve-3d parent. */
-#butterfly-element.butterfly--near-button .butterfly-component::after {
-    animation: butterfly-glow 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes butterfly-glow {
-    0% {
-        background: radial-gradient(circle, rgba(74, 158, 255, 0.35) 0%, transparent 70%);
-        width: 70px; height: 70px;
-    }
-    100% {
-        background: radial-gradient(circle, rgba(130, 200, 255, 0.65) 0%, transparent 70%);
-        width: 90px; height: 90px;
-    }
-}
-
-/* ── 5-Part PNG Butterfly Component CSS ───────────────────────────────── */
-.butterfly-component {
-    position: absolute;    /* Positioned inside the zero-size #butterfly-element */
-    top: -40px;            /* Offset so the visual center of the 80x80 component   */
-    left: -40px;           /* aligns with the translate3d origin point              */
-    width: 80px;
-    height: 80px;
-    /*
-     * NO filter here — filter breaks transform-style: preserve-3d,
-     * collapsing all child rotateY() to zero-width and making wings invisible.
-     * Glow effect is applied on a sibling pseudo-element via CSS.
-     */
-    transform-style: preserve-3d;
-    pointer-events: none;
-    will-change: transform;
-}
-
-/* Glow layer rendered behind the butterfly parts using a pseudo-element.
- * This approach avoids filter on the preserve-3d element. */
-.butterfly-component::after {
-    content: "";
+/* Inner — animation state carrier */
+.butterfly-inner {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(74, 158, 255, 0.25) 0%, transparent 70%);
+    top: -52px;
+    left: -55px;
+    width: 110px;
+    height: 104px;
+    overflow: visible;
     pointer-events: none;
-    z-index: 0;
-    /* pseudo-elements don't break parent preserve-3d */
+
+    /* Default timing custom properties (overridden by JS via setFlappingSpeed) */
+    --flap-upper-dur:  0.38s;
+    --flap-lower-dur:  0.43s;
+    --flap-pause-dur:  0.05s;
 }
 
-.butterfly-part {
-    position: absolute;
-    user-select: none;
-    pointer-events: none;
+/* SVG fills its container */
+.butterfly-svg {
+    width: 110px;
+    height: 104px;
+    overflow: visible;
+    display: block;
 }
 
-/* Body (Thorax / Abdomen) centered at X=40, Y=40 */
-.butterfly-body-wrap {
-    position: absolute;
-    top: 24px;
-    left: 28px;
-    width: 24px;
-    height: 32px;
-    z-index: 3;
-    pointer-events: none;
+/*
+ * ── Wing flap animations ─────────────────────────────────────────────────
+ *
+ * Upper wings rotate on the Y axis (fold perspective effect) combined with
+ * a gentle Z roll. They share a single transform-origin at the body midline.
+ *
+ * Lower wings use a slightly different timing and amplitude — they "follow"
+ * the upper wing with a natural mechanical lag.
+ *
+ * The left/right naming here is from the viewer's perspective (left wing
+ * is the butterfly's right wing — mirrored in SVG with scale(-1,1)).
+ *
+ * @keyframes use step asymmetry so wings ease-in on the downstroke
+ * (fast) and ease-out on the upstroke (slow) — mimicking real lepidoptera.
+ */
+
+/* ── Upper wing left ── */
+#bf-wing-left-upper {
+    transform-origin: 0px 0px;
+    animation:
+        flap-upper-left var(--flap-upper-dur, 0.38s) cubic-bezier(0.42,0,0.58,1) infinite alternate,
+        flap-upper-tilt 1.7s ease-in-out infinite alternate;
 }
 
-.butterfly-body {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+/* ── Upper wing right (mirrored via scale(-1,1) in SVG) ── */
+#bf-wing-right-upper {
+    transform-origin: 0px 0px;
+    animation:
+        flap-upper-right var(--flap-upper-dur, 0.38s) cubic-bezier(0.42,0,0.58,1) infinite alternate,
+        flap-upper-tilt-r 1.7s ease-in-out infinite alternate;
+    animation-delay: 0s, 0.3s;
 }
 
-/* Wing groups anchored at thorax joint (X=40px, Y=26px) */
-.butterfly-wing-group {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80px;
-    height: 80px;
-    transform-style: preserve-3d;
-    will-change: transform;
-    z-index: 2;
+/* ── Lower wing left ── */
+#bf-wing-left-lower {
+    transform-origin: 0px 4px;
+    animation:
+        flap-lower-left var(--flap-lower-dur, 0.43s) cubic-bezier(0.38,0,0.62,1) infinite alternate;
+    animation-delay: calc(var(--flap-lower-dur, 0.43s) * 0.08);
 }
 
-.wing-group-left {
-    transform-origin: 40px 26px;
-    animation: butterfly-flap-left var(--flap-duration, 0.22s) ease-in-out infinite alternate;
+/* ── Lower wing right ── */
+#bf-wing-right-lower {
+    transform-origin: 0px 4px;
+    animation:
+        flap-lower-right var(--flap-lower-dur, 0.43s) cubic-bezier(0.38,0,0.62,1) infinite alternate;
+    animation-delay: calc(var(--flap-lower-dur, 0.43s) * 0.08);
 }
 
-.wing-group-right {
-    transform-origin: 40px 26px;
-    animation: butterfly-flap-right var(--flap-duration, 0.22s) ease-in-out infinite alternate;
+/*
+ * Upper wing open (viewer left) — rotates out from body midline.
+ * Uses perspective skew via rotateY to give a folding 3D appearance.
+ */
+@keyframes flap-upper-left {
+    0%   { transform: rotateY(  0deg) rotateZ( 0.0deg) skewY( 0deg); }
+    15%  { transform: rotateY( 18deg) rotateZ(-1.2deg) skewY( 0.4deg); }
+    55%  { transform: rotateY( 58deg) rotateZ(-4.0deg) skewY( 1.2deg); }
+    80%  { transform: rotateY( 68deg) rotateZ(-5.0deg) skewY( 1.5deg); }
+    100% { transform: rotateY( 72deg) rotateZ(-5.5deg) skewY( 1.8deg); }
 }
 
-@keyframes butterfly-flap-left {
-    0%   { transform: rotateY(0deg) rotateZ(0deg); }
-    100% { transform: rotateY(70deg) rotateZ(-5deg); }
+@keyframes flap-upper-right {
+    0%   { transform: rotateY(  0deg) rotateZ( 0.0deg) skewY( 0deg); }
+    15%  { transform: rotateY(-18deg) rotateZ( 1.2deg) skewY(-0.4deg); }
+    55%  { transform: rotateY(-58deg) rotateZ( 4.0deg) skewY(-1.2deg); }
+    80%  { transform: rotateY(-68deg) rotateZ( 5.0deg) skewY(-1.5deg); }
+    100% { transform: rotateY(-72deg) rotateZ( 5.5deg) skewY(-1.8deg); }
 }
 
-@keyframes butterfly-flap-right {
-    0%   { transform: rotateY(0deg) rotateZ(0deg); }
-    100% { transform: rotateY(-70deg) rotateZ(5deg); }
+/* Subtle secondary tilt — independent slow oscillation */
+@keyframes flap-upper-tilt {
+    0%   { transform: translateY( 0px); }
+    50%  { transform: translateY(-0.8px); }
+    100% { transform: translateY( 0.4px); }
+}
+@keyframes flap-upper-tilt-r {
+    0%   { transform: translateY( 0px); }
+    50%  { transform: translateY(-0.6px); }
+    100% { transform: translateY( 0.5px); }
 }
 
-/* Upper wings */
-.wing-left-upper {
-    top: 8px;
-    left: 2px;
-    width: 40px;
-    height: 34px;
-    object-fit: contain;
-    z-index: 2;
+/* Lower wings follow with lag + smaller amplitude */
+@keyframes flap-lower-left {
+    0%   { transform: rotateY(  0deg) rotateZ( 0deg) translateY(0px); }
+    40%  { transform: rotateY( 32deg) rotateZ(-2deg) translateY(-0.5px); }
+    100% { transform: rotateY( 48deg) rotateZ(-3deg) translateY(-1px); }
 }
 
-.wing-right-upper {
-    top: 8px;
-    left: 38px;
-    width: 40px;
-    height: 34px;
-    object-fit: contain;
-    z-index: 2;
+@keyframes flap-lower-right {
+    0%   { transform: rotateY(  0deg) rotateZ( 0deg) translateY(0px); }
+    40%  { transform: rotateY(-32deg) rotateZ( 2deg) translateY(-0.5px); }
+    100% { transform: rotateY(-48deg) rotateZ( 3deg) translateY(-1px); }
 }
 
-/* Lower wings with secondary lag flex */
-.wing-left-lower {
-    top: 26px;
-    left: 18px;
-    width: 24px;
-    height: 38px;
-    object-fit: contain;
-    z-index: 1;
-    animation: butterfly-flex-left var(--flap-duration, 0.22s) ease-in-out infinite alternate;
+/* Body micro-movement caused by wing motion */
+#bf-body {
+    animation: body-pulse 0.76s ease-in-out infinite alternate;
+}
+@keyframes body-pulse {
+    0%   { transform: translateY( 0px) scaleY(1.000); }
+    60%  { transform: translateY(-0.4px) scaleY(1.004); }
+    100% { transform: translateY( 0.3px) scaleY(0.998); }
 }
 
-.wing-right-lower {
-    top: 26px;
-    left: 38px;
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    z-index: 1;
-    animation: butterfly-flex-right var(--flap-duration, 0.22s) ease-in-out infinite alternate;
+/* Antennae gentle sway */
+#bf-antennae {
+    transform-origin: 0px -4px;
+    animation: antenna-sway 2.8s ease-in-out infinite alternate;
+}
+@keyframes antenna-sway {
+    0%   { transform: rotate(-1.2deg); }
+    50%  { transform: rotate( 0.4deg); }
+    100% { transform: rotate( 1.0deg); }
 }
 
-@keyframes butterfly-flex-left {
-    0%   { transform: rotateZ(0deg); }
-    100% { transform: rotateZ(4deg); }
+/*
+ * ── State: FLY (default) ──────────────────────────────────────────────────
+ * Normal flight flap speed — set by default custom properties or setFlappingSpeed().
+ */
+.bfly-state-fly .butterfly-inner,
+.butterfly-inner {
+    /* nothing extra — CSS animations run at their natural rate */
 }
 
-@keyframes butterfly-flex-right {
-    0%   { transform: rotateZ(0deg); }
-    100% { transform: rotateZ(-4deg); }
+/*
+ * ── State: HOVER ──────────────────────────────────────────────────────────
+ * Slower, calmer flap. JS calls setFlappingSpeed(0.5) for hover mode.
+ * This class adds a gentle bob to the inner container.
+ */
+.bfly-state-hover .butterfly-inner {
+    animation: hover-bob 2.2s ease-in-out infinite alternate;
+}
+@keyframes hover-bob {
+    0%   { transform: translateY( 0px); }
+    50%  { transform: translateY(-2.5px); }
+    100% { transform: translateY( 1.5px); }
 }
 
-/* ── Translucent Environmental Continue Button ───────────────────────── */
+/*
+ * ── State: REST ───────────────────────────────────────────────────────────
+ * Wings mostly folded. Upper wings stay near-closed.
+ * Lower wings nearly still. Occasional micro-adjust via slow keyframes.
+ */
+.bfly-state-rest #bf-wing-left-upper {
+    animation:
+        flap-rest-upper-left 3.4s ease-in-out infinite alternate;
+}
+.bfly-state-rest #bf-wing-right-upper {
+    animation:
+        flap-rest-upper-right 3.4s ease-in-out infinite alternate;
+}
+.bfly-state-rest #bf-wing-left-lower {
+    animation:
+        flap-rest-lower-left 4.2s ease-in-out infinite alternate;
+    animation-delay: 0.6s;
+}
+.bfly-state-rest #bf-wing-right-lower {
+    animation:
+        flap-rest-lower-right 4.2s ease-in-out infinite alternate;
+    animation-delay: 0.6s;
+}
+
+/* Resting upper wing — mostly folded, rare small adjustment */
+@keyframes flap-rest-upper-left {
+    0%   { transform: rotateY(60deg) rotateZ(-4.5deg); }
+    30%  { transform: rotateY(62deg) rotateZ(-4.8deg); }
+    55%  { transform: rotateY(58deg) rotateZ(-4.2deg); }
+    80%  { transform: rotateY(64deg) rotateZ(-5.0deg); }
+    100% { transform: rotateY(61deg) rotateZ(-4.6deg); }
+}
+@keyframes flap-rest-upper-right {
+    0%   { transform: rotateY(-60deg) rotateZ( 4.5deg); }
+    30%  { transform: rotateY(-62deg) rotateZ( 4.8deg); }
+    55%  { transform: rotateY(-58deg) rotateZ( 4.2deg); }
+    80%  { transform: rotateY(-64deg) rotateZ( 5.0deg); }
+    100% { transform: rotateY(-61deg) rotateZ( 4.6deg); }
+}
+
+/* Resting lower wing — very minimal motion */
+@keyframes flap-rest-lower-left {
+    0%   { transform: rotateY(42deg) rotateZ(-2.5deg); }
+    50%  { transform: rotateY(44deg) rotateZ(-2.8deg); }
+    100% { transform: rotateY(41deg) rotateZ(-2.3deg); }
+}
+@keyframes flap-rest-lower-right {
+    0%   { transform: rotateY(-42deg) rotateZ( 2.5deg); }
+    50%  { transform: rotateY(-44deg) rotateZ( 2.8deg); }
+    100% { transform: rotateY(-41deg) rotateZ( 2.3deg); }
+}
+
+/* Resting body — very gentle */
+.bfly-state-rest #bf-body {
+    animation: body-rest 5s ease-in-out infinite alternate;
+}
+@keyframes body-rest {
+    0%   { transform: translateY(0px); }
+    100% { transform: translateY(0.5px); }
+}
+
+/* Resting antennae — slow, almost imperceptible */
+.bfly-state-rest #bf-antennae {
+    animation: antenna-rest 6s ease-in-out infinite alternate;
+}
+@keyframes antenna-rest {
+    0%   { transform: rotate(-0.8deg); }
+    100% { transform: rotate( 0.6deg); }
+}
+
+
+
+/* ── Minimal Atmospheric [ CONTINUE ] Button ──────────────────────────── */
 #butterfly-continue {
     position: absolute;
-    bottom: 28%;
+    bottom: 26%;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 6; /* Front of water, behind foreground grass */
+    z-index: 8;
     opacity: 0;
     pointer-events: auto;
-    transition: opacity 1.5s ease, transform 1.5s ease;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    padding: 10px 32px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 1.2s ease, border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+
+#butterfly-continue:hover {
+    color: rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.04);
 }

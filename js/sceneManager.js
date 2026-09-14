@@ -146,6 +146,10 @@ var SceneManager = (function() {
         _busy    = false;
         _current = null;
 
+        if (sceneName !== "boot" && sceneName !== "terminal") {
+            setState("terminalAuthenticated", true);
+        }
+
         Transition.reset();
         _enterScene(scene);
     }
